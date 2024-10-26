@@ -15,6 +15,10 @@ app.get('/', (req: Request, res: Response) => {
     res.send('app working');
 });
 
+app.get('/test', (req: Request, res: Response) => {
+    res.send('testing route');
+});
+
 if (externalUrl) {
     const hostname = '0.0.0.0';
     app.listen(port, hostname, () => {
