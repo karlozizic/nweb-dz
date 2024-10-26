@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import https from 'https';
 import fs from 'fs';
+import cors from 'cors';
 
 const app = express();
 
@@ -10,6 +11,11 @@ const port = externalUrl && process.env.PORT ? parseInt(process.env.PORT) : 4080
 const config = {
     baseURL: externalUrl || `https://localhost:${port}`,
 };
+
+app.use(cors({
+    origin: 'http://localhost:4000',
+    credentials: true
+}));
 
 app.get('/', (req: Request, res: Response) => {
     res.send('app working');
