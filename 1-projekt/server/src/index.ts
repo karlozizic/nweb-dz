@@ -11,6 +11,10 @@ const config = {
     baseURL: externalUrl || `https://localhost:${port}`,
 };
 
+app.get('/', (req: Request, res: Response) => {
+    res.send('app working');
+});
+
 if (externalUrl) {
     const hostname = '0.0.0.0';
     app.listen(port, hostname, () => {
