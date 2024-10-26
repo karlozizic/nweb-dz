@@ -12,8 +12,16 @@ const config = {
     baseURL: externalUrl || `https://localhost:${port}`,
 };
 
+const allowed = ['http://localhost:4000', 'https://nweb-dz-1.onrender.com'];
+
 app.use(cors({
-    origin: 'http://localhost:4000',
+    origin: (origin, callback) => {
+        if (!origin || allowed.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 
