@@ -34,7 +34,7 @@ const checkJwtM2M = auth({
 
 const allowedUrls = ['http://localhost:4000',
     'http://localhost:4000/generateGiftCard',
-    'https://nweb-dz-1.onrender.com',
+    'https://nweb-dz-1.onrender.com/',
     'https://nweb-dz-1.onrender.com/generateGiftCard'];
 
 app.use(cors({
