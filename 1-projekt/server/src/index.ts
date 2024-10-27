@@ -32,6 +32,7 @@ const checkJwtM2M = auth({
     issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`
 });
 
+//TODO: uncomment
 /*const allowedUrls = ['http://localhost:4000',
     'http://localhost:4000/generateGiftCard',
     'https://nweb-dz-1.onrender.com/',
@@ -59,6 +60,8 @@ app.get('/api/giftCards', async (req: Request, res: Response) => {
     try {
         console.log('GET /api/giftCards');
         const result = await pool.query('SELECT * FROM gift_cards');
+        //TODO: remove
+        console.log(result.rows);
         res.setHeader('Content-Type', 'application/json');
         res.json(result.rows);
     } catch (error) {
