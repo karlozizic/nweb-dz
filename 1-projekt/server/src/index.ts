@@ -2,6 +2,21 @@ import express, { Request, Response } from 'express';
 import https from 'https';
 import fs from 'fs';
 import cors from 'cors';
+import { auth } from 'express-oauth2-jwt-bearer';
+import * as dotenv from 'dotenv';
+import { Pool } from 'pg';
+import { v4 as uuidv4 } from 'uuid';
+import QRCode from 'qrcode';
+
+dotenv.config({ path: '.env' });
+
+const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: parseInt(process.env.DB_PORT || '5432'),
+});
 
 const app = express();
 
@@ -12,11 +27,19 @@ const config = {
     baseURL: externalUrl || `https://localhost:${port}`,
 };
 
-const allowed = ['http://localhost:4000', 'https://nweb-dz-1.onrender.com'];
+const checkJwtM2M = auth({
+    audience: process.env.AUTH0_AUDIENCE,
+    issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`
+});
+
+const allowedUrls = ['http://localhost:4000',
+    'http://localhost:4000/generateGiftCard',
+    'https://nweb-dz-1.onrender.com',
+    'https://nweb-dz-1.onrender.com/generateGiftCard'];
 
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || allowed.includes(origin)) {
+        if (!origin || allowedUrls.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -25,15 +48,47 @@ app.use(cors({
     credentials: true
 }));
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('app working');
+app.use(express.json());
+
+app.get('/api/giftCards', async (req: Request, res: Response) => {
+    try {
+        const result = await pool.query('SELECT * FROM gift_cards');
+        res.setHeader('Content-Type', 'application/json');
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
 });
 
-app.get('/test', (req: Request, res: Response) => {
-    res.send('testing route');
+app.post('/api/giftCards/generate', checkJwtM2M, async (req: Request, res: Response) : Promise<any> => {
+    const { oib, firstName, lastName} = req.body;
+
+    if (!oib || !firstName || !lastName) {
+        return res.status(400).json({error: 'Missing required fields for gift card generation'});
+    }
+
+    const gitfCardsNumByOib = await pool.query(
+        'SELECT COUNT(*) FROM gift_cards WHERE oib = $1',
+        [oib]
+    );
+
+    if (gitfCardsNumByOib.rows[0].count >= 3) {
+        return res.status(400).json({error: 'Maximum number of gift cards reached for this OIB'});
+    }
+
+    const giftCardId = uuidv4();
+
+    const result = await pool.query('INSERT INTO gift_cards (id, oib, first_name, last_name, created) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)', [giftCardId, oib, firstName, lastName]);
+
+    const giftCardUrl = `${process.env.FRONTEND_URL}/giftCard/${giftCardId}`;
+
+    const qrCode = await QRCode.toDataURL(giftCardUrl);
+
+    res.json({qrCode: qrCode});
 });
 
-if (externalUrl) {
+if (externalUrl === undefined) {
     const hostname = '0.0.0.0';
     app.listen(port, hostname, () => {
         console.log(`locally run on: http://${hostname}:${port}/ available on url: ${externalUrl}`);
