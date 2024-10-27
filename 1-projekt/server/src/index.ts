@@ -57,6 +57,7 @@ app.use(express.json());
 
 app.get('/api/giftCards', async (req: Request, res: Response) => {
     try {
+        console.log('GET /api/giftCards');
         const result = await pool.query('SELECT * FROM gift_cards');
         res.setHeader('Content-Type', 'application/json');
         res.json(result.rows);
