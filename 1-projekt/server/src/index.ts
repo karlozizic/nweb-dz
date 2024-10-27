@@ -88,7 +88,7 @@ app.post('/api/giftCards/generate', checkJwtM2M, async (req: Request, res: Respo
 
     const result = await pool.query('INSERT INTO gift_cards (id, oib, first_name, last_name, created) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)', [giftCardId, oib, firstName, lastName]);
 
-    const giftCardUrl = `${process.env.FRONTEND_URL}/giftCard/${giftCardId}`;
+    const giftCardUrl = `${process.env.FRONTEND_URL}/#/giftCard/${giftCardId}`;
 
     const qrCode = await QRCode.toDataURL(giftCardUrl);
 
