@@ -21,11 +21,11 @@ const pool = new Pool({
 const app = express();
 
 const externalUrl = process.env.RENDER_EXTERNAL_URL;
-const port = externalUrl && process.env.PORT ? parseInt(process.env.PORT) : 4080;
+//const port = externalUrl && process.env.PORT ? parseInt(process.env.PORT) : 4080;
 
-const config = {
+/*const config = {
     baseURL: externalUrl || `https://localhost:${port}`,
-};
+};*/
 
 const checkJwtM2M = auth({
     audience: process.env.AUTH0_AUDIENCE,
@@ -94,6 +94,7 @@ app.post('/api/giftCards/generate', checkJwtM2M, async (req: Request, res: Respo
     res.json({qrCode: qrCode});
 });
 
+/*
 if (externalUrl === undefined) {
     const hostname = '0.0.0.0';
     app.listen(port, hostname, () => {
@@ -102,11 +103,16 @@ if (externalUrl === undefined) {
 }
 else {
     const httpsOptions = {
-        /*key: fs.readFileSync('server.key'),
-        cert: fs.readFileSync('server.cert'),*/
+        /!*key: fs.readFileSync('server.key'),
+        cert: fs.readFileSync('server.cert'),*!/
     };
 
     https.createServer(httpsOptions, app).listen(port, () => {
         console.log(`Server running on: ${externalUrl}`);
     });
-}
+}*/
+const port = process.env.PORT || 4080;
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
