@@ -95,6 +95,18 @@ app.post('/api/giftCards/generate', checkJwtM2M, async (req: Request, res: Respo
     res.json({qrCode: qrCode});
 });
 
+app.get('/api/giftCard/:id', async (req: Request, res: Response) : Promise<any> => {
+    const { id } = req.params;
+
+    const result = await pool.query('SELECT * FROM gift_cards WHERE id = $1', [id]);
+
+    if (result.rows.length === 0) {
+        return res.status(404).json({error: 'Gift card not found'});
+    }
+
+    res.json(result.rows[0]);
+});
+//TODO
 /*
 if (externalUrl === undefined) {
     const hostname = '0.0.0.0';

@@ -40,17 +40,17 @@ function GenerateGiftCardPage(){
     }
 
     return (
-        <div className="generate-container">
+        <div>
             <h1>Generate Gift Card Page</h1>
 
             {error && (
-                <div className="error-container">
+                <div>
                     {error}
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="generate-form">
-                <div className="form-group">
+            <form onSubmit={handleSubmit}>
+                <div>
                     <label>
                         Oib:
                     </label>
@@ -67,7 +67,7 @@ function GenerateGiftCardPage(){
                 </div>
             </form>
             {qrCode && (
-                <div className="qr-container">
+                <div>
                     <h2>Generated QR Code:</h2>
                     <img src={qrCode} alt="Gift Card QR Code" />
                 </div>
