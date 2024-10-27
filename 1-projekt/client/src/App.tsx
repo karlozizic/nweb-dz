@@ -15,7 +15,15 @@ function App() {
               redirect_uri: window.location.origin,
               audience: process.env.REACT_APP_AUTH0_AUDIENCE
           }}
+          useRefreshTokens={true}
+          cacheLocation="localstorage"
+          onRedirectCallback={(appState) => {
+              if (appState?.returnTo) {
+                  window.location.hash = appState.returnTo;
+              }
+          }}
       >
+
           <HashRouter>
             <Routes>
                 <Route path="/" element={<GiftCardsPage />} />
