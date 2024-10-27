@@ -21,7 +21,7 @@ function GiftCardPage() {
         const fetchGiftCard = async () => {
             if (!isAuthenticated) {
                 loginWithRedirect({
-                    appState: { returnTo: window.location.pathname }
+                    appState: { returnTo: `/giftCard/${id}` }
                 });
                 return;
             }
