@@ -15,29 +15,32 @@ function GiftCardPage() {
     const { user, isAuthenticated, isLoading, loginWithRedirect, getAccessTokenSilently } = useAuth0();
     const [giftCard, setGiftCard] = useState<any>(null);
     const [error, setError] = useState('');
-    const [isLoaded, setIsLoaded] = useState(true);
+    const [Loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log('GiftCardPage useEffect');
-        if (isLoading)
-            return;
-
-        if (!isAuthenticated) {
+        /*if (!isAuthenticated) {
             loginWithRedirect({
                 appState: { returnTo: window.location.pathname }
             });
             return;
-        }
+        }*/
 
         const fetchGiftCard = async () => {
+            setLoading(true);
+
             const token = await getAccessTokenSilently();
-            console.log('Sending request to:', `${process.env.REACT_APP_API_URL}/api/giftCard/${id}`);
+
+            console.log('Fetching gift card:', id);
+
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/giftCard/${id}`,{
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 }
             });
+
             console.log('Response:', response);
+
             if (!response.ok) {
                 setError('Error fetching gift card');
                 return;
@@ -45,12 +48,13 @@ function GiftCardPage() {
 
             const data = await response.json();
             setGiftCard(data);
+            setLoading(false);
         }
 
         fetchGiftCard();
     }, [isAuthenticated, loginWithRedirect, getAccessTokenSilently, id]);
 
-    if (!isLoaded) {
+    if (isLoading || Loading) {
         return (
             <div>
                 <h1>Gift Card Page</h1>
