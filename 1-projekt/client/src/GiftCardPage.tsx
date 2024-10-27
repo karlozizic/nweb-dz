@@ -101,8 +101,7 @@ function GiftCardPage() {
     return (
         <div>
             <div>
-                <p>First Name: {user.name}</p>
-                <p>Last Name: {user.email}</p>
+                <p>Name: {user.name}</p>
             </div>
             <div>
                 <p>Gift Card ID: {giftCard.id}</p>
