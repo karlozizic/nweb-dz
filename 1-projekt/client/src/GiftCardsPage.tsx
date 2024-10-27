@@ -23,7 +23,7 @@ function GiftCardsPage() {
 
                 const data = await response.json();
                 console.log('Fetched data:', data);
-                setGiftCardsNumber(data.length || 0);
+                setGiftCardsNumber(data.num || 0);
             } catch (error) {
                 console.error('Error fetching gift cards:', error);
             }

@@ -60,10 +60,8 @@ app.get('/api/giftCards', async (req: Request, res: Response) => {
     try {
         console.log('GET /api/giftCards');
         const result = await pool.query('SELECT * FROM gift_cards');
-        //TODO: remove
-        console.log(result.rows);
         res.setHeader('Content-Type', 'application/json');
-        res.json(result.rows);
+        res.json({num: result.rows.length});
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal server error');
