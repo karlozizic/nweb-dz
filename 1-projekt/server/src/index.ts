@@ -48,6 +48,11 @@ app.use(cors({
     credentials: true
 }));*/
 
+app.use(cors({
+    origin: true,
+    credentials: true
+}));
+
 app.use(express.json());
 
 app.get('/api/giftCards', async (req: Request, res: Response) => {
