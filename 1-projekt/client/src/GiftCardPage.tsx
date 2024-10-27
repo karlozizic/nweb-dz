@@ -18,6 +18,7 @@ function GiftCardPage() {
     const [isLoaded, setIsLoaded] = useState(true);
 
     useEffect(() => {
+        console.log('GiftCardPage useEffect');
         if (isLoading)
             return;
 
@@ -30,13 +31,13 @@ function GiftCardPage() {
 
         const fetchGiftCard = async () => {
             const token = await getAccessTokenSilently();
-
+            console.log('Sending request to:', `${process.env.REACT_APP_API_URL}/api/giftCard/${id}`);
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/giftCard/${id}`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-
+            console.log('Response:', response);
             if (!response.ok) {
                 setError('Error fetching gift card');
                 return;
