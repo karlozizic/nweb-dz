@@ -101,13 +101,12 @@ if (externalUrl === undefined) {
     });
 }
 else {
-    https.createServer(
-        {
-            //key: fs.readFileSync('server.key'),
-            //cert: fs.readFileSync('server.cert'),
-        },
-        app
-    ).listen(port, () => {
-        console.log(`server run on: https://localhost:${port}/`);
+    const httpsOptions = {
+        /*key: fs.readFileSync('server.key'),
+        cert: fs.readFileSync('server.cert'),*/
+    };
+
+    https.createServer(httpsOptions, app).listen(port, () => {
+        console.log(`Server running on: ${externalUrl}`);
     });
 }
