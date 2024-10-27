@@ -18,13 +18,20 @@ function GiftCardPage() {
     const [Loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (isLoading) return;
+
+        if (!isAuthenticated) {
+            const path = `/giftCard/${id}`;
+            loginWithRedirect({
+                appState: { returnTo: path }
+            });
+        }
+    }, [isAuthenticated, isLoading, id, loginWithRedirect]);
+
+    useEffect(() => {
         const fetchGiftCard = async () => {
-            if (!isAuthenticated) {
-                loginWithRedirect({
-                    appState: { returnTo: `/giftCard/${id}` }
-                });
-                return;
-            }
+
+            if (!isAuthenticated || !id) return;
 
             setLoading(true);
 
