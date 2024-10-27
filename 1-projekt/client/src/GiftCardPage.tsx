@@ -18,14 +18,14 @@ function GiftCardPage() {
     const [Loading, setLoading] = useState(true);
 
     useEffect(() => {
-        /*if (!isAuthenticated) {
-            loginWithRedirect({
-                appState: { returnTo: window.location.pathname }
-            });
-            return;
-        }*/
-
         const fetchGiftCard = async () => {
+            if (!isAuthenticated) {
+                loginWithRedirect({
+                    appState: { returnTo: window.location.pathname }
+                });
+                return;
+            }
+
             setLoading(true);
 
             const token = await getAccessTokenSilently();
